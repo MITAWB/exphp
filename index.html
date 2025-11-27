@@ -548,6 +548,65 @@
             </div>
         </div>
 
+        <!-- 5b. Tema 1 – Resumen para examen -->
+        <div class="slide">
+            <div class="max-w-5xl w-full">
+                <div class="flex items-center gap-4 mb-8">
+                    <span class="bg-sky-600 text-white px-3 py-1 rounded font-bold">Tema 1</span>
+                    <h2 class="text-3xl font-bold">Tema 1: puntos clave que pueden caer</h2>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-6 text-sm">
+                    <div class="concept-card p-5 rounded-xl border-l-4 border-sky-500">
+                        <span class="exam-badge badge-test">Conceptos</span>
+                        <h3 class="text-lg font-semibold text-sky-300 mb-2">Cliente/servidor y tipos de página</h3>
+                        <ul class="list-disc list-inside text-slate-200 text-xs md:text-sm">
+                            <li>Definir <span class="font-semibold">cliente</span> (navegador) y <span
+                                    class="font-semibold">servidor web</span> (Apache, IIS...).</li>
+                            <li>Página estática: HTML fijo que el servidor envía tal cual.</li>
+                            <li>Página dinámica: el servidor ejecuta código (PHP, JSP, ASP...) y genera el HTML al
+                                vuelo.</li>
+                            <li>Recordar frase: «El navegador nunca ve el código PHP, solo el HTML generado».</li>
+                        </ul>
+                    </div>
+
+                    <div class="concept-card p-5 rounded-xl border-l-4 border-emerald-500">
+                        <span class="exam-badge badge-dev">Arquitectura</span>
+                        <h3 class="text-lg font-semibold text-emerald-300 mb-2">Componentes y 3 capas</h3>
+                        <ul class="list-disc list-inside text-slate-200 text-xs md:text-sm mb-2">
+                            <li>Componentes: servidor web, módulo PHP, BD (MySQL), código en servidor.</li>
+                            <li>Capa presentación: HTML, CSS, JS en el navegador.</li>
+                            <li>Capa lógica: código PHP que valida datos y aplica reglas.</li>
+                            <li>Capa datos: SGBD donde se guardan usuarios, productos, etc.</li>
+                        </ul>
+                        <div class="exam-tip">
+                            Ventaja que puedes decir: separa interfaz, lógica y datos, lo que hace la aplicación más
+                            mantenible y escalable.
+                        </div>
+                    </div>
+
+                    <div class="concept-card p-5 rounded-xl border-l-4 border-fuchsia-500">
+                        <span class="exam-badge badge-dev">Desarrollo</span>
+                        <h3 class="text-lg font-semibold text-fuchsia-300 mb-2">Preguntas típicas de Tema 1</h3>
+                        <ul class="list-disc list-inside text-slate-200 text-xs md:text-sm mb-2">
+                            <li>Explica el modelo cliente/servidor en la Web.</li>
+                            <li>Diferencias entre páginas estáticas y dinámicas.</li>
+                            <li>Describe una arquitectura web en 3 capas con ejemplo.</li>
+                            <li>Explica el flujo <span class="font-semibold">cliente → Apache → PHP → BD →
+                                    cliente</span>.</li>
+                            <li>Nombra varias tecnologías de servidor (CGI, PHP, JSP/Servlets, ASP) y di cuál se usa hoy
+                                en día.</li>
+                        </ul>
+                        <div class="exam-tip">
+                            Si te sale una de desarrollo de Tema 1, construye la respuesta usando exactamente estos
+                            puntos, en 6–8 líneas.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <!-- 6. Tema 2 – Inserción de código, php.ini y variables -->
         <div class="slide">
             <div class="max-w-5xl w-full">
