@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Repaso Examen PHP - Entorno Servidor</title>
+
+    <!-- Tailwind + Iconos + Fuentes -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet" />
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            background-color: #020617;
+            color: #e2e8f0;
+        }
+
+        .slider-container {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .slide {
+            min-width: 100vw;
+            height: 100vh;
+            overflow-y: auto;
+            padding: 2rem;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            scrollbar-width: thin;
+            scrollbar-color: #3b82f6 #0f172a;
+        }
+
+        .code-block {
+            font-family: 'Fira Code', monospace;
+            background: #020617;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border-left: 4px solid #3b82f6;
+            margin: 1rem 0;
+            white-space: pre-wrap;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.7);
+            font-size: 0.85rem;
+        }
+
+        .concept-card {
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .concept-card:hover {
+            transform: translateY(-4px);
+            border-color: #3b82f6;
+            box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3);
+        }
+
+        .exam-badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+            z-index: 10;
+        }
+
+        .badge-test {
+            background: #eab308;
+            color: #0f172a;
+            border: 1px solid #facc15;
+        }
+
+        .badge-dev {
+            background: #8b5cf6;
+            color: white;
+            border: 1px solid #a855f7;
+        }
+
+        .badge-prac {
+            background: #22c55e;
+            color: #022c22;
+            border: 1px solid #4ade80;
+        }
+
+        .nav-controls {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 50;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 10px rgba(15, 23, 42, 0.8);
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .nav-btn:hover {
+            transform: scale(1.1);
+            background: #2563eb;
+        }
+
+        .nav-btn:disabled {
+            background: #64748b;
+            cursor: not-allowed;
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(to right, #22c55e, #3b82f6);
+            z-index: 100;
+            transition: width 0.25s ease-out;
+        }
+
+        .exam-tip {
+            background: rgba(34, 197, 94, 0.06);
+            border: 1px dashed #22c55e;
+            padding: 0.6rem 0.8rem;
+            border-radius: 0.5rem;
+            font-size: 0.85rem;
+            color: #bbf7d0;
+            margin-top: 0.6rem;
+        }
+
+        .warning-tip {
+            background: rgba(239, 68, 68, 0.06);
+            border: 1px dashed #ef4444;
+            padding: 0.6rem 0.8rem;
+            border-radius: 0.5rem;
+            font-size: 0.85rem;
+            color: #fecaca;
+            margin-top: 0.6rem;
+        }
+
+        details summary::-webkit-details-marker {
+            display: none;
+        }
+
+        details summary::after {
+            content: '\25BC';
+            font-size: 0.75rem;
+            margin-left: 0.5rem;
+            color: #94a3b8;
+        }
+
+        details[open] summary::after {
+            content: '\25B2';
+        }
+    </style>
+</head>
+
+<body>
+    <div class="progress-bar" id="progressBar" style="width: 0%;"></div>
+
+    <div class="slider-container" id="slider">
+
+        <!-- 0. Portada / resumen examen -->
+        <div
+            class="slide bg-gradient-to-br from-slate-950 via-slate-900 to-sky-900 flex items-center justify-center text-center">
+            <div class="max-w-4xl">
+                <div
+                    class="mb-4 inline-flex items-center gap-2 bg-emerald-400 text-slate-900 px-4 py-1 rounded-full text-sm font-bold uppercase tracking-wider">
+                    <i class="fa-solid fa-bolt"></i>
+                    <span>Examen PHP - Mañana</span>
+                </div>
+                <h1
+                    class="text-4xl md:text-6xl font-extrabold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-sky-400">
+                    Repaso Intensivo PHP<br class="hidden md:block" /> Entorno Servidor
+                </h1>
+                <p class="text-lg md:text-xl text-slate-200 mb-8 max-w-2xl mx-auto">
+                    Mapa completo de <span class="font-semibold">arquitecturas web</span>,
+                    <span class="font-semibold">bases de PHP</span>, estructuras de control,
+                    <span class="font-semibold">funciones</span> y <span class="font-semibold">formularios
+                        GET/POST</span>.
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+                    <div class="concept-card p-6 rounded-xl border-l-4 border-yellow-400">
+                        <span class="exam-badge badge-test">30 test</span>
+                        <h3 class="text-2xl font-bold text-yellow-400 mb-2">Tipo test</h3>
+                        <p class="text-sm text-slate-200">
+                            Diferencias GET/POST, tipos y conversiones, <span class="font-semibold">php.ini</span>,
+                            arrays, bucles, funciones, componentes de una arquitectura web.
+                        </p>
+                    </div>
+                    <div class="concept-card p-6 rounded-xl border-l-4 border-purple-400">
+                        <span class="exam-badge badge-dev">Teoría</span>
+                        <h3 class="text-2xl font-bold text-purple-300 mb-2">Pregunta teórica</h3>
+                        <p class="text-sm text-slate-200">
+                            Explicar bien un flujo típico: página dinámica con PHP, o cómo funciona un formulario
+                            enviado por GET/POST y cómo se procesan los datos.
+                        </p>
+                    </div>
+                    <div class="concept-card p-6 rounded-xl border-l-4 border-emerald-400">
+                        <span class="exam-badge badge-prac">Práctico</span>
+                        <h3 class="text-2xl font-bold text-emerald-300 mb-2">Caso práctico</h3>
+                        <p class="text-sm text-slate-200">
+                            Mini-ejercicios con bucles y arrays, o autenticación simple con formulario y función
+                            <span class="font-semibold">validar()</span> en PHP.
+                        </p>
+                    </div>
+                </div>
+
+                <p class="mt-8 text-xs md:text-sm text-slate-300">
+                    Plan: 1ª vuelta rápida a todas las diapositivas para ubicarlo todo, 2ª vuelta fuerte a
+                    <span class="font-semibold">Tema 2–4</span> y FAQ de desarrollo.
+                </p>
+            </div>
+        </div>
+
+        <!-- 1. Mapa rápido de temas -->
+        <div class="slide">
+            <div class="max-w-5xl w-full">
+                <div class="flex items-center gap-4 mb-8">
+                    <span class="bg-sky-600 text-white px-3 py-1 rounded font-bold">0</span>
+                    <h2 class="text-3xl font-bold">Mapa rápido de qué va cada tema</h2>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8 text-sm">
+                    <div class="space-y-4">
+                        <div class="concept-card p-5 rounded-xl border-l-4 border-sky-500">
+                            <span class="exam-badge badge-dev">Tema 1</span>
+                            <h3 class="text-xl font-semibold text-sky-300 mb-2">Arquitecturas web y herramientas</h3>
+                            <p class="text-slate-200 mb-2">
+                                Modelo <span class="font-semibold">cliente/servidor</span>, diferencia entre
+                                páginas estáticas y dinámicas, capas (presentación, lógica, datos) y
+                                tecnologías de servidor como <span class="font-semibold">PHP, JSP/Servlets y
+                                    ASP</span>.
+                            </p>
+                            <p class="text-slate-200">
+                                Además, stack <span class="font-semibold">AMP/XAMPP</span>, carpeta
+                                <code>htdocs</code>, primera página PHP, y visión general de
+                                <span class="font-semibold">Node.js</span> y <span
+                                    class="font-semibold">TypeScript</span>.
+                            </p>
+                        </div>
+
+                        <div class="concept-card p-5 rounded-xl border-l-4 border-indigo-500">
+                            <span class="exam-badge badge-dev">Tema 2</span>
+                            <h3 class="text-xl font-semibold text-indigo-300 mb-2">Bases de PHP</h3>
+                            <p class="text-slate-200 mb-2">
+                                Cómo se inserta código PHP en HTML, etiquetas de servidor en PHP/ASP/JSP y
+                                papel del fichero <span class="font-semibold">php.ini</span> (directivas clave:
+                                <code>file_uploads</code>, <code>upload_max_filesize</code>,
+                                <code>max_execution_time</code>, etc.).
+                            </p>
+                            <p class="text-slate-200">
+                                También variables, ámbito, constantes, tipos de datos, conversiones,
+                                cadenas y operadores básicos.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="concept-card p-5 rounded-xl border-l-4 border-emerald-500">
+                            <span class="exam-badge badge-dev">Tema 3</span>
+                            <h3 class="text-xl font-semibold text-emerald-300 mb-2">Sentencias, bucles y arrays</h3>
+                            <p class="text-slate-200 mb-2">
+                                Sintaxis de <span class="font-semibold">if, if-else, switch</span>, bucles
+                                <span class="font-semibold">for, while, do-while, foreach</span>, y sentencias
+                                <code>break</code> / <code>continue</code>.
+                            </p>
+                            <p class="text-slate-200">
+                                Arrays y matrices: cómo se crean, cómo se recorren y operaciones típicas
+                                (<code>array_merge</code>, <code>array_slice</code>, <code>sort</code>, etc.),
+                                más comentarios en PHP.
+                            </p>
+                        </div>
+
+                        <div class="concept-card p-5 rounded-xl border-l-4 border-pink-500">
+                            <span class="exam-badge badge-dev">Tema 4</span>
+                            <h3 class="text-xl font-semibold text-pink-300 mb-2">Funciones y formularios</h3>
+                            <p class="text-slate-200 mb-2">
+                                Definición de funciones propias, parámetros, <code>return</code>, funciones útiles de
+                                PHP (fecha, ficheros, directorios…).
+                            </p>
+                            <p class="text-slate-200">
+                                Formularios HTML, atributos <code>ACTION</code> y
+                                <code>METHOD</code>, diferencias <span class="font-semibold">GET vs POST</span> y cómo
+                                recuperar datos con <code>$_GET</code> y <code>$_POST</code>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Tema 1 – Cliente/servidor y estáticas/dinámicas -->
+        <div class="slide">
+            <div class="max-w-5xl w-full">
+                <div class="flex items-center gap-4 mb-8">
+                    <span class="bg-sky-600 text-white px-3 py-1 rounded font-bold">Tema 1</span>
+                    <h2 class="text-3xl font-bold">Modelo cliente/servidor y tipo de páginas</h2>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8 text-sm">
+                    <div class="concept-card p-6 rounded-xl border-l-4 border-sky-500">
+                        <span class="exam-badge badge-dev">Definiciones</span>
+                        <h3 class="text-xl font-semibold text-sky-300 mb-3">Cliente y servidor web</h3>
+                        <p class="text-slate-200 mb-2">
+                            <span class="font-semibold">Cliente</span>: normalmente el navegador (Chrome, Firefox…) que
+                            inicia la comunicación. Envía peticiones <span class="font-semibold">HTTP</span> al
+                            servidor pidiendo recursos.
+                        </p>
+                        <p class="text-slate-200 mb-2">
+                            <span class="font-semibold">Servidor web</span>: software (Apache, IIS…) que recibe las
+                            peticiones, ejecuta lógica en servidor si hace falta (PHP, JSP, ASP) y devuelve una
+                            respuesta (casi siempre HTML).
+                        </p>
+                        <p class="text-slate-200">
+                            El navegador <span class="font-semibold">nunca ve</span> el código PHP: sólo recibe el
+                            HTML generado.
+                        </p>
+                        <div class="exam-tip">
+                            Respuesta compacta de examen: «En la Web el cliente (navegador) envía peticiones HTTP al
+                            servidor, que procesa la lógica y devuelve páginas HTML como respuesta».
+                        </div>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div class="concept-card p-4 rounded-xl border-l-4 border-amber-400">
+                            <span class="exam-badge badge-test">Test</span>
+                            <h3 class="text-lg font-semibold text-amber-300 mb-2">Página estática</h3>
+                            <ul class="list-disc list-inside text-slate-200">
+                                <li>Archivo <strong>.html</strong> guardado tal cual en el servidor.</li>
+                                <li>El servidor sólo lee el fichero y lo envía sin modificarlo.</li>
+                                <li>El contenido no cambia según el usuario ni según la petición.</li>
+                            </ul>
+                        </div>
+                        <div class="concept-card p-4 rounded-xl border-l-4 border-emerald-400">
+                            <span class="exam-badge badge-dev">Clave</span>
+                            <h3 class="text-lg font-semibold text-emerald-300 mb-2">Página dinámica</h3>
+                            <ul class="list-disc list-inside text-slate-200 mb-2">
+                                <li>El contenido se genera <strong>al vuelo</strong> cuando llega la petición.</li>
+                                <li>El servidor ejecuta código (PHP, JSP, ASP…), puede consultar una BD.</li>
+                                <li>El resultado final es HTML que se envía al navegador.</li>
+                            </ul>
+                            <div class="exam-tip">
+                                Frase que tienes que soltar: «En una página dinámica el servidor ejecuta código (PHP,
+                                JSP, ASP…), genera HTML y al cliente sólo le llega ese HTML, nunca el código».
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Tema 1 – Páginas dinámicas: componentes y capas -->
+        <div class="slide">
+            <div class="max-w-5xl w-full">
+                <div class="flex items-center gap-4 mb-8">
+                    <span class="bg-sky-600 text-white px-3 py-1 rounded font-bold">Tema 1</span>
+                    <h2 class="text-3xl font-bold">Componentes y capas en una web dinámica</h2>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8 text-sm">
+                    <div class="concept-card p-6 rounded-xl border-l-4 border-indigo-500">
+                        <span class="exam-badge badge-dev">Componentes</span>
+                        <h3 class="text-xl font-semibold text-indigo-300 mb-3">Elementos básicos</h3>
+                        <ul class="list-disc list-inside text-slate-200 mb-2">
+                            <li><strong>Lenguaje de servidor</strong>: PHP, JSP, ASP…</li>
+                            <li><strong>Servidor web</strong>: Apache, IIS…</li>
+                            <li><strong>Módulo del lenguaje</strong>: por ejemplo, módulo PHP dentro de Apache.</li>
+                            <li><strong>Base de datos</strong>: MySQL/MariaDB, etc.</li>
+                        </ul>
+                        <p class="text-slate-200">
+                            El servidor web recibe la petición, detecta que es un <code>.php</code>, delega en PHP, y el
+                            resultado vuelve al servidor para ser enviado al cliente.
+                        </p>
+                    </div>
+
+                    <div class="concept-card p-6 rounded-xl border-l-4 border-emerald-500">
+                        <span class="exam-badge badge-dev">3 capas</span>
+                        <h3 class="text-xl font-semibold text-emerald-300 mb-3">Arquitectura en 3 capas</h3>
+                        <div class="grid md:grid-cols-3 gap-3 text-xs md:text-sm">
+                            <div class="bg-slate-900 rounded-lg p-3 border border-sky-700">
+                                <p class="font-semibold text-sky-300 mb-1">Presentación</p>
+                                <p class="text-slate-200">HTML, CSS y JavaScript en el navegador. Interfaz que ve el
+                                    usuario.</p>
+                            </div>
+                            <div class="bg-slate-900 rounded-lg p-3 border border-emerald-700">
+                                <p class="font-semibold text-emerald-300 mb-1">Lógica de negocio</p>
+                                <p class="text-slate-200">Código PHP en servidor: valida datos, aplica reglas,
+                                    decide qué mostrar.</p>
+                            </div>
+                            <div class="bg-slate-900 rounded-lg p-3 border border-amber-700">
+                                <p class="font-semibold text-amber-300 mb-1">Datos</p>
+                                <p class="text-slate-200">Sistema gestor de BD (MySQL). Guarda usuarios, productos,
+                                    pedidos, etc.</p>
+                            </div>
+                        </div>
+                        <div class="exam-tip mt-4">
+                            Si preguntan ventajas: separación de responsabilidades, más fácil de mantener, escalar y
+                            reutilizar. Inconveniente: más compleja y requiere más infraestructura.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Tema 1 – Lenguajes servidor e integración -->
+        <div class="slide">
+            <div class="max-w-5xl w-full">
+                <div class="flex items-center gap-4 mb-8">
+                    <span class="bg-sky-600 text-white px-3 py-1 rounded font-bold">Tema 1</span>
+                    <h2 class="text-3xl font-bold">Lenguajes en servidor e integración con Apache</h2>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8 text-sm">
+                    <div class="space-y-5">
+                        <div class="concept-card p-5 rounded-xl border-l-4 border-fuchsia-500">
+                            <span class="exam-badge badge-test">Repaso</span>
+                            <h3 class="text-lg font-semibold text-fuchsia-300 mb-2">CGI y tecnologías de scripting</h3>
+                            <ul class="list-disc list-inside text-slate-200">
+                                <li><strong>CGI</strong> (Common Gateway Interface): primer mecanismo para ejecutar
+                                    programas en servidor. Creaba un proceso por petición → poco eficiente → casi en
+                                    desuso.</li>
+                                <li><strong>PHP</strong>: software libre, muy usado, se integra en HTML, corre en
+                                    servidor, soporta programación estructurada y orientada a objetos.</li>
+                                <li><strong>ASP</strong>: tecnología de Microsoft para páginas dinámicas.</li>
+                                <li><strong>JSP/Servlets</strong>: Java en servidor. JSP se convierte en servlet y se
+                                    ejecuta en un contenedor (Tomcat).</li>
+                            </ul>
+                        </div>
+
+                        <div class="concept-card p-5 rounded-xl border-l-4 border-slate-500">
+                            <span class="exam-badge badge-dev">Servlets</span>
+                            <h3 class="text-lg font-semibold text-slate-100 mb-2">Contenedor de servlets</h3>
+                            <p class="text-slate-200 mb-1">Software (como Tomcat) que:</p>
+                            <ul class="list-disc list-inside text-slate-200">
+                                <li>Carga los servlets y gestiona su ciclo de vida (init, service, destroy).</li>
+                                <li>Recibe peticiones HTTP y las redirige al servlet adecuado.</li>
+                                <li>Se encarga de la gestión de recursos y de la concurrencia.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="concept-card p-6 rounded-xl border-l-4 border-sky-500">
+                        <span class="exam-badge badge-dev">Flujo</span>
+                        <h3 class="text-xl font-semibold text-sky-300 mb-3">Cómo se integra PHP con Apache</h3>
+                        <ol class="list-decimal list-inside text-slate-200 space-y-1 mb-3">
+                            <li>El cliente pide <code>http://localhost/proyecto/hola.php</code>.</li>
+                            <li>Apache recibe la petición HTTP.</li>
+                            <li>Detecta la extensión <code>.php</code> y pasa el fichero al intérprete PHP.</li>
+                            <li>PHP ejecuta el script, puede consultar la base de datos.</li>
+                            <li>PHP genera un HTML (o JSON, etc.) como salida.</li>
+                            <li>Apache envía ese HTML al navegador.</li>
+                        </ol>
+                        <div class="exam-tip">
+                            Si sale una pregunta de desarrollo, describe este flujo de 4–5 líneas y remata con: «El
+                            cliente sólo recibe el HTML resultado de ejecutar el script en servidor».
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. Tema 1 – Herramientas, XAMPP, Node, TS -->
+        <div class="slide">
+            <div class="max-w-5xl w-full">
+                <div class="flex items-center gap-4 mb-8">
+                    <span class="bg-sky-600 text-white px-3 py-1 rounded font-bold">Tema 1</span>
+                    <h2 class="text-3xl font-bold">Herramientas de desarrollo, XAMPP, Node y TypeScript</h2>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8 text-sm">
+                    <div class="space-y-5">
+                        <div class="concept-card p-5 rounded-xl border-l-4 border-slate-500">
+                            <span class="exam-badge badge-test">Herramientas</span>
+                            <h3 class="text-lg font-semibold text-slate-100 mb-2">Navegadores y editores</h3>
+                            <ul class="list-disc list-inside text-slate-200 mb-2">
+                                <li><strong>Navegadores</strong>: para probar las páginas (DevTools, consola, redes,
+                                    etc.).</li>
+                                <li><strong>Editores ligeros</strong>: Notepad++, etc., para archivos sueltos.</li>
+                                <li><strong>IDEs</strong>: NetBeans, etc., para proyectos grandes (depurar,
+                                    autocompletar,
+                                    integrar con servidor).</li>
+                            </ul>
+                        </div>
+
+                        <div class="concept-card p-5 rounded-xl border-l-4 border-amber-500">
+                            <span class="exam-badge badge-dev">XAMPP</span>
+                            <h3 class="text-lg font-semibold text-amber-300 mb-2">AMP = Apache + MySQL + PHP</h3>
+                            <ul class="list-disc list-inside text-slate-200 mb-2">
+                                <li><strong>XAMPP</strong>: paquete que incluye Apache, MySQL/MariaDB, PHP,
+                                    phpMyAdmin, etc.</li>
+                                <li>Desde el panel controlas <strong>Apache</strong> y <strong>MySQL</strong>.</li>
+                                <li>Carpeta de trabajo típica en Windows: <code>C:\xampp\htdocs</code>.</li>
+                            </ul>
+                            <p class="text-slate-200">
+                                Para acceder a <code>ejemplo.php</code> dentro de <code>htdocs/proyecto/</code>:
+                                <code>http://localhost/proyecto/ejemplo.php</code>.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="concept-card p-6 rounded-xl border-l-4 border-emerald-500">
+                        <span class="exam-badge badge-dev">Extra</span>
+                        <h3 class="text-xl font-semibold text-emerald-300 mb-3">Node.js y TypeScript (visión general)
+                        </h3>
+                        <p class="text-slate-200 mb-2">
+                            <strong>Node.js</strong>: entorno de ejecución para JavaScript en servidor (fuera del
+                            navegador). Permite crear servidores HTTP y aplicaciones completas sólo con JS.
+                        </p>
+                        <p class="text-slate-200 mb-2">
+                            <strong>TypeScript</strong>: superconjunto de JavaScript con <span
+                                class="font-semibold">tipado estático</span> (añade tipos, interfaces, etc.).
+                            Se <em>transpila</em> a JavaScript normal, que es lo que realmente ejecutan navegador y
+                            Node.
+                        </p>
+                        <div class="exam-tip">
+                            Si cae algo, con decir que «Node permite ejecutar JS en servidor» y «TypeScript añade tipos
+                            estáticos a JS y luego se transforma a JS puro» vas sobrado.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. Tema 2 – Inserción de código, php.ini y variables -->
+        <div class="slide">
+            <div class="max-w-5xl w-full">
+                <div class="flex items-center gap-4 mb-8">
+                    <span class="bg-indigo-600 text-white px-3 py-1 rounded font-bold">Tema 2</span>
+                    <h2 class="text-3xl font-bold">Inserción de código PHP, php.ini y variables</h2>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8 text-sm">
+                    <div class="concept-card p-6 rounded-xl border-l-4 border-indigo-500">
+                        <span class="exam-badge badge-dev">PHP / ASP / JSP</span>
+                        <h3 class="text-xl font-semibold text-indigo-300 mb-3">Cómo se embebe código de servidor</h3>
+                        <p class="text-slate-200 mb-2">
+                            En PHP, el código se inserta entre etiquetas especiales:
+                        </p>
+                        <div class="code-block text-xs">
+                            &lt;?php
+                            // código PHP
+                            ?&gt;
+                        </div>
+                        <p class="text-slate-200 mb-2">
+                            Todo lo que esté dentro se ejecuta en <span class="font-semibold">servidor</span>.
+                            Fuera es HTML normal.
+                        </p>
+                        <ul class="list-disc list-inside text-slate-200 mb-2">
+                            <li><strong>ASP</strong>: bloques <code>&lt;% ... %&gt;</code> o<br>
+                                <code>&lt;script language="VBScript" runat="Server"&gt;...&lt;/script&gt;</code>.
+                            </li>
+                            <li><strong>JSP</strong>: sintaxis parecida a <code>&lt;% ... %&gt;</code>, aunque en el
+                                tema sólo se ve por encima.</li>
+                        </ul>
+                        <div class="exam-tip">
+                            Si te preguntan «¿Cómo se inserta código PHP en un HTML?», di que se usa
+                            <code>&lt;?php ... ?&gt;</code> y que ese bloque se ejecuta en servidor.
+                        </div>
+                    </div>
+
+                    <div class="concept-card p-6 rounded-xl border-l-4 border-amber-500">
+                        <span class="exam-badge badge-test">Config</span>
+                        <h3 class="text-xl font-semibold text-amber-300 mb-3">Fichero php.ini y variables básicas</h3>
+                        <p class="text-slate-200 mb-2">
+                            <strong>php.ini</strong> es el archivo de configuración de PHP. Algunas directivas que salen
+                            mucho:
+                        </p>
+                        <ul class="list-disc list-inside text-slate-200 mb-2">
+                            <li><code>file_uploads</code>: activa o no las subidas de ficheros por HTTP.</li>
+                            <li><code>upload_max_filesize</code>: tamaño máximo de fichero subido.</li>
+                            <li><code>max_execution_time</code>: tiempo máximo que puede tardar un script.</li>
+                            <li><code>short_open_tags</code>: permite usar <code>&lt;? ... ?&gt;</code> en lugar de
+                                <code>&lt;?php ... ?&gt;</code> (no recomendable).
+                            </li>
+                            <li><code>error_reporting</code>: qué errores se muestran.</li>
+                        </ul>
+                        <p class="text-slate-200 mb-2">
+                            <strong>Variables en PHP</strong>:
+                        </p>
+                        <ul class="list-disc list-inside text-slate-200">
+                            <li>Siempre empiezan por <code>$</code>: <code>$nombre</code>, <code>$edad</code>.</li>
+                            <li>Sensibles a mayúsculas/minúsculas (<code>$edad</code> ≠ <code>$Edad</code>).</li>
+                            <li>Se crean al asignar un valor: <code>$x = 5;</code>.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 7. Tema 2 – Tipos, conversiones, cadenas, operadores -->
+        <div class="slide">
+            <div class="max-w-5xl w-full">
+                <div class="flex items-center gap-4 mb-8">
+                    <span class="bg-indigo-600 text-white px-3 py-1 rounded font-bold">Tema 2</span>
+                    <h2 class="text-3xl font-bold">Tipos, conversiones, cadenas y operadores en PHP</h2>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8 text-sm">
+                    <div class="concept-card p-6 rounded-xl border-l-4 border-emerald-500">
+                        <span class="exam-badge badge-test">Tipos</span>
+                        <h3 class="text-xl font-semibold text-emerald-300 mb-3">Tipos de datos y conversiones</h3>
+                        <p class="text-slate-200 mb-2">
+                            Tipos básicos en PHP:
+                        </p>
+                        <ul class="list-disc list-inside text-slate-200 mb-2">
+                            <li><strong>string</strong> → cadenas.</li>
+                            <li><strong>integer</strong> → enteros.</li>
+                            <li><strong>float</strong> → decimales.</li>
+                            <li><strong>boolean</strong> → <code>true</code> / <code>false</code>.</li>
+                            <li><strong>array</strong> → conjunto de valores.</li>
+                            <li>Especiales: <strong>object</strong>, <strong>resource</strong>, <strong>NULL</strong>.
+                            </li>
+                        </ul>
+                        <p class="text-slate-200 mb-2">Funciones típicas de comprobación:</p>
+                        <ul class="list-disc list-inside text-slate-200 mb-2">
+                            <li><code>is_string()</code>, <code>is_int()</code>, <code>is_bool()</code>,
+                                <code>is_array()</code>, <code>is_numeric()</code>, <code>is_null()</code>.
+                            </li>
+                        </ul>
+                        <p class="text-slate-200 mb-2">Conversión de tipos:</p>
+                        <div class="code-block text-xs">
+                            $entero = intval($var);
+                            $real = floatval($var);
+                            $texto = strval($var);
+                            $otroInt = (int)$var; // casting
+                        </div>
+                    </div>
+
+                    <div class="space-y-5">
+                        <div class="concept-card p-5 rounded-xl border-l-4 border-sky-500">
+                            <span class="exam-badge badge-dev">Cadenas</span>
+                            <h3 class="text-lg font-semibold text-sky-300 mb-2">Strings y concatenación</h3>
+                            <p class="text-slate-200 mb-2">
+                                Una cadena es un conjunto de caracteres entre comillas dobles.
+                            </p>
+                            <div class="code-block text-xs">
+                                $nombre = "Mita";
+                                echo "Hola {$nombre}"; // se recomienda usar llaves
+                                $resultado = $texto1 . $texto2; // operador de concatenación
+                            </div>
+                            <p class="text-slate-200 mb-1">Funciones típicas:</p>
+                            <ul class="list-disc list-inside text-slate-200">
+                                <li><code>str_replace()</code> → sustituir texto.</li>
+                                <li><code>strtolower()</code> / <code>strtoupper()</code> → minúsculas/mayúsculas.</li>
+                                <li><code>strlen()</code> → longitud.</li>
+                                <li><code>ltrim()</code> → quita espacios a la izquierda.</li>
+                            </ul>
+                        </div>
+
+                        <div class="concept-card p-5 rounded-xl border-l-4 border-amber-500">
+                            <span class="exam-badge badge-test">Operadores</span>
+                            <h3 class="text-lg font-semibold text-amber-300 mb-2">Aritméticos, comparación, lógicos</h3>
+                            <p class="text-slate-200 mb-1">Aritméticos: <code>+ - * / % ++ --</code></p>
+                            <p class="text-slate-200 mb-1">Comparación:</p>
+                            <ul class="list-disc list-inside text-slate-200 mb-1">
+                                <li><code>==</code> (igualdad de valor)</li>
+                                <li><code>===</code> (igualdad de valor y tipo)</li>
+                                <li><code>!=</code> o <code>&lt;&gt;</code> (distinto), <code>&lt;</code>,
+                                    <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code>
+                                </li>
+                            </ul>
+                            <p class="text-slate-200 mb-1">Lógicos: <code>&amp;&amp;</code>, <code>||</code>,
+                                <code>!</code>
+                            </p>
+                            <p class="text-slate-200">Asignación: <code>=</code>, <code>+=</code>,
+                                <code>-=</code>, <code>*=</code>, <code>/=</code>, <code>.=</code> (concatena y
+                                asigna).
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 8. Tema 3 – Sentencias y bucles -->
+        <div class="slide">
+            <div class="max-w-5xl w-full">
+                <div class="flex items-center gap-4 mb-8">
+                    <span class="bg-emerald-600 text-white px-3 py-1 rounded font-bold">Tema 3</span>
+                    <h2 class="text-3xl font-bold">Sentencias condicionales y bucles en PHP</h2>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8 text-sm">
+                    <div class="concept-card p-6 rounded-xl border-l-4 border-emerald-500">
+                        <span class="exam-badge badge-dev">Condicionales</span>
+                        <h3 class="text-xl font-semibold text-emerald-300 mb-3">if, if-else y switch</h3>
+                        <p class="text-slate-200 mb-2"><strong>if</strong>: ejecuta el bloque sólo si se cumple la
+                            condición.</p>
+                        <div class="code-block text-xs">
+                            if ($edad &gt;= 18) {
+                            echo "Mayor de edad";
+                            }
+                        </div>
+                        <p class="text-slate-200 mb-2"><strong>if-else</strong>: dos caminos posibles.</p>
+                        <div class="code-block text-xs">
+                            if ($edad &gt;= 18) {
+                            echo "Mayor";
+                            } else {
+                            echo "Menor";
+                            }
+                        </div>
+                        <p class="text-slate-200 mb-2"><strong>switch</strong>: cuando una variable puede tomar
+                            muchos valores.</p>
+                        <div class="code-block text-xs">
+                            switch ($perfil) {
+                            case "admin":
+                            // ...
+                            break;
+                            case "user":
+                            // ...
+                            break;
+                            default:
+                            // ...
+                            }
+                        </div>
+                    </div>
+
+                    <div class="concept-card p-6 rounded-xl border-l-4 border-sky-500">
+                        <span class="exam-badge badge-dev">Bucles</span>
+                        <h3 class="text-xl font-semibold text-sky-300 mb-3">for, while, do-while, foreach</h3>
+                        <p class="text-slate-200 mb-2">Todos repiten un bloque, pero cambian la forma de control:</p>
+                        <ul class="list-disc list-inside text-slate-200 mb-2">
+                            <li><strong>for</strong>: número de repeticiones conocido.</li>
+                            <li><strong>while</strong>: «mientras que» se cumpla la condición (puede no entrar).</li>
+                            <li><strong>do-while</strong>: ejecuta el bloque <em>al menos una vez</em>, luego comprueba.
+                            </li>
+                            <li><strong>foreach</strong>: recorre arrays de forma sencilla.</li>
+                        </ul>
+                        <div class="code-block text-xs">
+                            for ($i = 1; $i &lt;= 10; $i++) {
+                            echo $i;
+                            }
+
+                            while ($i &lt;= 10) {
+                            echo $i;
+                            $i++;
+                            }
+
+                            foreach ($usuarios as $u) {
+                            echo $u;
+                            }
+                        </div>
+                        <div class="warning-tip text-xs">
+                            Recuerda <code>break</code> para salir de un bucle y <code>continue</code> para saltar a la
+                            siguiente iteración.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 9. Tema 3 – Arrays, matrices y comentarios -->
+        <div class="slide">
+            <div class="max-w-5xl w-full">
+                <div class="flex items-center gap-4 mb-8">
+                    <span class="bg-emerald-600 text-white px-3 py-1 rounded font-bold">Tema 3</span>
+                    <h2 class="text-3xl font-bold">Arrays, matrices y comentarios</h2>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8 text-sm">
+                    <div class="concept-card p-6 rounded-xl border-l-4 border-emerald-500">
+                        <span class="exam-badge badge-test">Arrays</span>
+                        <h3 class="text-xl font-semibold text-emerald-300 mb-3">Crear y trabajar con arrays</h3>
+                        <p class="text-slate-200 mb-2">Un array guarda varios valores en una sola variable.</p>
+                        <div class="code-block text-xs">
+                            // Array asociativo (clave =&gt; valor)
+                            $notas = array(
+                            "Juan" =&gt; 7,
+                            "Ana" =&gt; 9,
+                            );
+
+                            // Array indexado
+                            $nums = array(1, 2, 3);
+                            $nums[] = 4; // añade al final
+                        </div>
+                        <p class="text-slate-200 mb-2">Operaciones típicas:</p>
+                        <ul class="list-disc list-inside text-slate-200 mb-2">
+                            <li><code>unset($array)</code> → borrar todo el array.</li>
+                            <li><code>unset($array[2])</code> → borrar un elemento.</li>
+                            <li><code>array_merge($a, $b)</code> → unir arrays.</li>
+                            <li><code>array_slice($a, $offset, $length)</code> → extraer parte.</li>
+                            <li><code>sort()</code> / <code>rsort()</code> → ordenar.</li>
+                        </ul>
+                    </div>
+
+                    <div class="space-y-5">
+                        <div class="concept-card p-5 rounded-xl border-l-4 border-sky-500">
+                            <span class="exam-badge badge-dev">Matrices</span>
+                            <h3 class="text-lg font-semibold text-sky-300 mb-2">Arrays multidimensionales</h3>
+                            <p class="text-slate-200 mb-2">Una matriz es un array que contiene otros arrays.</p>
+                            <div class="code-block text-xs">
+                                $matriz = array(
+                                "user1" =&gt; array("login" =&gt; "juan", "perfil" =&gt; "admin"),
+                                "user2" =&gt; array("login" =&gt; "ana", "perfil" =&gt; "user"),
+                                );
+
+                                echo $matriz["user1"]["login"]; // "juan"
+                            </div>
+                        </div>
+
+                        <div class="concept-card p-5 rounded-xl border-l-4 border-amber-500">
+                            <span class="exam-badge badge-test">Comentarios</span>
+                            <h3 class="text-lg font-semibold text-amber-300 mb-2">Comentar código PHP</h3>
+                            <ul class="list-disc list-inside text-slate-200 mb-2">
+                                <li><code>// comentario de una línea</code></li>
+                                <li><code># también una línea</code></li>
+                                <li><code>/* comentario
+multilínea */</code></li>
+                            </ul>
+                            <p class="text-slate-200">
+                                En HTML los comentarios son <code>&lt;!-- ... --&gt;</code>, pero <span
+                                    class="font-semibold">no sirven</span> dentro de bloques PHP.
+                            </p>
+                            <div class="exam-tip mt-3">
+                                En un caso práctico, comentar bien un bucle o una función suele sumar puntos fáciles.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 10. Tema 4 – Funciones y funciones útiles -->
+        <div class='slide'>
+            <div class='max-w-5xl w-full'>
+                <div class='flex items-center gap-4 mb-8'>
+                    <span class='bg-pink-600 text-white px-3 py-1 rounded font-bold'>Tema 4</span>
+                    <h2 class='text-3xl font-bold'>Funciones en PHP y funciones útiles del lenguaje</h2>
+                </div>
+
+                <div class='grid md:grid-cols-2 gap-8 text-sm'>
+                    <div class='concept-card p-6 rounded-xl border-l-4 border-pink-500'>
+                        <span class='exam-badge badge-dev'>Propias</span>
+                        <h3 class='text-xl font-semibold text-pink-300 mb-3'>Qué es una función y cómo se define</h3>
+                        <p class='text-slate-200 mb-2'>
+                            Una función es un subprograma con un nombre, parámetros opcionales y un bloque de
+                            instrucciones.
+                            Puede devolver un valor con return.
+                        </p>
+                        <div class='code-block text-xs'>
+                            function sumar($a, $b = 0) {
+                            $resultado = $a + $b;
+                            return $resultado;
+                            }
+
+                            $total = sumar(3, 5); // 8
+                        </div>
+                        <p class='text-slate-200 mb-2'>
+                            Paso de parámetros:
+                        </p>
+                        <ul class='list-disc list-inside text-slate-200 mb-2'>
+                            <li>Por valor: se pasa una copia (comportamiento por defecto).</li>
+                            <li>Por referencia: se usa &amp;$param para modificar la variable original.</li>
+                        </ul>
+                        <ul class='list-disc list-inside text-slate-200 mb-2'>
+                            <li>Permiten reutilizar código.</li>
+                            <li>Hacen el programa más legible.</li>
+                            <li>Facilitan depurar y mantener.</li>
+                        </ul>
+                        <div class='exam-tip'>
+                            Frase de examen: «Una función en PHP es un subprograma identificado por un nombre, con
+                            parámetros
+                            opcionales, que agrupa instrucciones y puede devolver un valor mediante return».
+                        </div>
+                    </div>
+
+                    <div class='concept-card p-6 rounded-xl border-l-4 border-sky-500'>
+                        <span class='exam-badge badge-test'>Built-in</span>
+                        <h3 class='text-xl font-semibold text-sky-300 mb-3'>Funciones ya existentes más usadas</h3>
+                        <p class='text-slate-200 mb-1'>
+                            PHP trae muchas funciones. En el tema destacan:
+                        </p>
+                        <ul class='list-disc list-inside text-slate-200 mb-2'>
+                            <li><span class='font-semibold'>Fecha y hora</span>: date(formato[, timestamp]).</li>
+                            <li><span class='font-semibold'>Aleatorios</span>: rand() o rand($min, $max).</li>
+                            <li><span class='font-semibold'>Directorios</span>: getcwd() devuelve el directorio actual.
+                            </li>
+                            <li><span class='font-semibold'>Impresión</span>: echo, print, print_r($array).</li>
+                            <li><span class='font-semibold'>Ficheros</span>: fopen(ruta, modo), fclose(manejador).</li>
+                            <li><span class='font-semibold'>Búsqueda de ficheros</span>: glob('*.php').</li>
+                        </ul>
+                        <div class='code-block text-xs'>
+                            $hoy = date('d/m/Y');
+                            $aleatorio = rand(1, 10);
+                            $ficherosPhp = glob('*.php');
+                        </div>
+                        <div class='exam-tip'>
+                            Si te piden ejemplos de funciones de PHP, menciona date, rand, getcwd, glob, fopen/fclose y
+                            print_r.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 11. Tema 4 – Formularios HTML: ACTION, METHOD y name -->
+        <div class='slide'>
+            <div class='max-w-5xl w-full'>
+                <div class='flex items-center gap-4 mb-8'>
+                    <span class='bg-pink-600 text-white px-3 py-1 rounded font-bold'>Tema 4</span>
+                    <h2 class='text-3xl font-bold'>Formularios HTML: ACTION, METHOD y name</h2>
+                </div>
+
+                <div class='grid md:grid-cols-2 gap-8 text-sm'>
+                    <div class='concept-card p-6 rounded-xl border-l-4 border-emerald-500'>
+                        <span class='exam-badge badge-dev'>Estructura</span>
+                        <h3 class='text-xl font-semibold text-emerald-300 mb-3'>Formulario básico</h3>
+                        <p class='text-slate-200 mb-2'>
+                            Un formulario HTML envía datos al servidor cuando el usuario pulsa el botón submit.
+                        </p>
+                        <div class='code-block text-xs'>
+                            &lt;form action='calcula.php' method='get'&gt;
+                            Valor 1: &lt;input type='text' name='valor1'&gt;
+                            Valor 2: &lt;input type='text' name='valor2'&gt;
+                            &lt;input type='submit' value='Aceptar'&gt;
+                            &lt;/form&gt;
+                        </div>
+                        <ul class='list-disc list-inside text-slate-200'>
+                            <li><span class='font-semibold'>action</span>: fichero PHP que procesará los datos.</li>
+                            <li><span class='font-semibold'>method</span>: get o post.</li>
+                            <li><span class='font-semibold'>name</span> en cada input: clave para recuperar el valor en
+                                PHP.</li>
+                        </ul>
+                    </div>
+
+                    <div class='concept-card p-6 rounded-xl border-l-4 border-amber-500'>
+                        <span class='exam-badge badge-test'>Clave test</span>
+                        <h3 class='text-xl font-semibold text-amber-300 mb-3'>Qué preguntan de los formularios</h3>
+                        <ul class='list-disc list-inside text-slate-200 mb-2'>
+                            <li>Qué indica action en un formulario.</li>
+                            <li>Diferencias entre method='get' y method='post'.</li>
+                            <li>Para qué sirve el atributo name en los campos.</li>
+                            <li>Qué archivo procesa la información (el del action).</li>
+                        </ul>
+                        <div class='exam-tip'>
+                            Respuesta rápida: «ACTION indica el script del servidor que recibe los datos, METHOD indica
+                            cómo
+                            se envían (GET o POST) y NAME identifica cada dato que luego recupero con $_GET o $_POST».
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 12. Tema 4 – GET y POST en PHP -->
+        <div class='slide'>
+            <div class='max-w-5xl w-full'>
+                <div class='flex items-center gap-4 mb-8'>
+                    <span class='bg-pink-600 text-white px-3 py-1 rounded font-bold'>Tema 4</span>
+                    <h2 class='text-3xl font-bold'>Métodos GET y POST en PHP</h2>
+                </div>
+
+                <div class='grid md:grid-cols-2 gap-8 text-sm'>
+                    <div class='concept-card p-6 rounded-xl border-l-4 border-sky-500'>
+                        <span class='exam-badge badge-test'>GET</span>
+                        <h3 class='text-xl font-semibold text-sky-300 mb-3'>Características de GET</h3>
+                        <ul class='list-disc list-inside text-slate-200 mb-2'>
+                            <li>Los datos viajan en la URL, después de un signo ?.</li>
+                            <li>Se ven en la barra del navegador.</li>
+                            <li>Hay limitación de longitud.</li>
+                            <li>Adecuado para búsquedas y filtros.</li>
+                        </ul>
+                        <div class='code-block text-xs'>
+                            // URL que llega al servidor:
+                            http://dominio.com/calcula.php?valor1=3&amp;valor2=5
+
+                            // En calcula.php:
+                            $valor1 = $_GET['valor1'];
+                            $valor2 = $_GET['valor2'];
+                            $resultado = $valor1 + $valor2;
+                        </div>
+                    </div>
+
+                    <div class='concept-card p-6 rounded-xl border-l-4 border-emerald-500'>
+                        <span class='exam-badge badge-test'>POST</span>
+                        <h3 class='text-xl font-semibold text-emerald-300 mb-3'>Características de POST</h3>
+                        <ul class='list-disc list-inside text-slate-200 mb-2'>
+                            <li>Los datos viajan en el cuerpo del mensaje HTTP.</li>
+                            <li>No se ven en la URL.</li>
+                            <li>Permite enviar más información (formularios largos, contraseñas, etc.).</li>
+                        </ul>
+                        <div class='code-block text-xs'>
+                            $usuario = $_POST['login'];
+                            $password = $_POST['password'];
+
+                            function validar($u, $p) {
+                            if ($u == 'user1') {
+                            if ($p == '1234') {
+                            echo 'Correcto, puedes pasar!';
+                            } else {
+                            echo 'Contraseña incorrecta';
+                            }
+                            } else {
+                            echo 'Usuario incorrecto';
+                            }
+                            }
+                        </div>
+                        <div class='exam-tip'>
+                            Diferencia que tienes que soltar: «GET envía los datos en la URL y POST en el cuerpo de la
+                            petición. GET es visible y limitado, POST es más adecuado para datos sensibles y formularios
+                            grandes».
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 13. Tema 4 – Casos prácticos típicos -->
+        <div class='slide'>
+            <div class='max-w-5xl w-full'>
+                <div class='flex items-center gap-4 mb-8'>
+                    <span class='bg-pink-600 text-white px-3 py-1 rounded font-bold'>Tema 4</span>
+                    <h2 class='text-3xl font-bold'>Casos prácticos típicos del tema</h2>
+                </div>
+
+                <div class='grid md:grid-cols-2 gap-8 text-sm'>
+                    <div class='concept-card p-6 rounded-xl border-l-4 border-sky-500'>
+                        <span class='exam-badge badge-prac'>Práctica</span>
+                        <h3 class='text-xl font-semibold text-sky-300 mb-3'>Funciones en PHP</h3>
+                        <ul class='list-disc list-inside text-slate-200 mb-2'>
+                            <li>Comprobar si un número es primo mediante una función.</li>
+                            <li>Calcular el factorial de un número con un bucle.</li>
+                            <li>Calcular la media de un array de notas.</li>
+                        </ul>
+                        <p class='text-slate-200'>
+                            Siempre mismo patrón: leer dato, llamar a la función, mostrar el resultado con echo dentro
+                            de
+                            HTML.
+                        </p>
+                    </div>
+
+                    <div class='concept-card p-6 rounded-xl border-l-4 border-emerald-500'>
+                        <span class='exam-badge badge-prac'>Práctica</span>
+                        <h3 class='text-xl font-semibold text-emerald-300 mb-3'>Formularios y autenticación</h3>
+                        <ul class='list-disc list-inside text-slate-200 mb-2'>
+                            <li>Formulario con login y password enviado por POST.</li>
+                            <li>Recoger datos con $_POST y pasarlos a una función validar().</li>
+                            <li>Dentro de validar(), usar if/else para comprobar usuario y contraseña.</li>
+                            <li>Mostrar mensajes tipo «Usuario incorrecto» o «Contraseña incorrecta».</li>
+                        </ul>
+                        <div class='exam-tip'>
+                            Si sale un práctico así, céntrate en: formulario con action, method, name; uso de $_POST y
+                            una función que haga toda la lógica.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 14. Resumen final: cómo te sirve para el examen -->
+        <div class='slide'>
+            <div class='max-w-5xl w-full'>
+                <div class='flex items-center gap-4 mb-8'>
+                    <span class='bg-sky-700 text-white px-3 py-1 rounded font-bold'>Resumen</span>
+                    <h2 class='text-3xl font-bold'>Cómo te sirve todo esto para el examen</h2>
+                </div>
+
+                <div class='grid md:grid-cols-3 gap-6 text-sm'>
+                    <div class='concept-card p-5 rounded-xl border-l-4 border-yellow-400'>
+                        <span class='exam-badge badge-test'>Tipo test</span>
+                        <h3 class='text-lg font-semibold text-yellow-300 mb-2'>Qué repasar fuerte</h3>
+                        <ul class='list-disc list-inside text-slate-200 text-xs md:text-sm'>
+                            <li>Diferencias GET vs POST.</li>
+                            <li>Qué es php.ini y sus directivas clave.</li>
+                            <li>Tipos de datos y funciones de conversión.</li>
+                            <li>Sintaxis de if, switch, for, while, do-while, foreach.</li>
+                            <li>Operadores aritméticos, lógicos y de comparación.</li>
+                            <li>Definición de array, matriz y comentarios.</li>
+                            <li>Componentes de una arquitectura web en 3 capas.</li>
+                        </ul>
+                    </div>
+
+                    <div class='concept-card p-5 rounded-xl border-l-4 border-purple-400'>
+                        <span class='exam-badge badge-dev'>Desarrollo</span>
+                        <h3 class='text-lg font-semibold text-purple-300 mb-2'>Preguntas de desarrollo</h3>
+                        <ul class='list-disc list-inside text-slate-200 text-xs md:text-sm'>
+                            <li>Flujo completo de un formulario GET/POST en PHP.</li>
+                            <li>Ventajas de usar funciones propias en un programa.</li>
+                            <li>Explicar una arquitectura web en 3 capas con ejemplo.</li>
+                            <li>Explicar el ciclo petición-respuesta con Apache + PHP.</li>
+                        </ul>
+                    </div>
+
+                    <div class='concept-card p-5 rounded-xl border-l-4 border-emerald-400'>
+                        <span class='exam-badge badge-prac'>Práctico</span>
+                        <h3 class='text-lg font-semibold text-emerald-300 mb-2'>Casos prácticos</h3>
+                        <ul class='list-disc list-inside text-slate-200 text-xs md:text-sm'>
+                            <li>Pequeñas operaciones con arrays y bucles (foreach, for).</li>
+                            <li>Formulario simple y tratamiento en PHP.</li>
+                            <li>Completar un código con una función y GET/POST.</li>
+                        </ul>
+                        <div class='exam-tip mt-3'>
+                            Idea general: en teoría demuestra que entiendes el flujo; en práctica, que sabes escribir el
+                            mínimo código correcto para que funcione.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 15. FAQ de desarrollo (respuestas tipo examen) -->
+        <div class='slide'>
+            <div class='max-w-4xl w-full'>
+                <div class='flex items-center gap-4 mb-8'>
+                    <span class='bg-emerald-600 text-white px-3 py-1 rounded font-bold'>FAQ</span>
+                    <h2 class='text-3xl font-bold'>Preguntas típicas de desarrollo (para memorizar)</h2>
+                </div>
+
+                <div class='space-y-4 text-sm'>
+                    <details class='concept-card p-4 rounded-xl border border-slate-700'>
+                        <summary class='cursor-pointer font-semibold text-emerald-300'>
+                            Explica el recorrido completo de un formulario enviado por POST en PHP.
+                        </summary>
+                        <div class='mt-3 text-slate-200'>
+                            <p class='mb-2'>
+                                El usuario rellena el formulario HTML y pulsa el botón de enviar. El navegador envía una
+                                petición HTTP POST al servidor con los datos en el cuerpo del mensaje.
+                            </p>
+                            <p class='mb-2'>
+                                El servidor web recibe la petición y la redirige al script indicado en el atributo
+                                action.
+                                En ese script PHP, los datos se recuperan con la superglobal $_POST usando las claves
+                                name
+                                de los campos.
+                            </p>
+                            <p>
+                                El script aplica la lógica necesaria (validaciones, consultas a la base de datos, etc.)
+                                y
+                                genera una página HTML de respuesta, que se devuelve al navegador.
+                            </p>
+                        </div>
+                    </details>
+
+                    <details class='concept-card p-4 rounded-xl border border-slate-700'>
+                        <summary class='cursor-pointer font-semibold text-emerald-300'>
+                            Diferencias entre GET y POST.
+                        </summary>
+                        <div class='mt-3 text-slate-200'>
+                            <ul class='list-disc list-inside'>
+                                <li>GET envía los datos en la URL; POST los envía en el cuerpo de la petición.</li>
+                                <li>En GET los datos se ven en la barra del navegador; en POST no.</li>
+                                <li>GET está más limitado en tamaño; POST permite formularios grandes.</li>
+                                <li>GET se usa para búsquedas y filtros; POST para datos sensibles y modificaciones.
+                                </li>
+                                <li>En PHP se recuperan con $_GET o $_POST según el método utilizado.</li>
+                            </ul>
+                        </div>
+                    </details>
+
+                    <details class='concept-card p-4 rounded-xl border border-slate-700'>
+                        <summary class='cursor-pointer font-semibold text-emerald-300'>
+                            Ventajas de usar funciones propias en un programa PHP.
+                        </summary>
+                        <div class='mt-3 text-slate-200'>
+                            <ul class='list-disc list-inside'>
+                                <li>Evitan repetir código: se escribe una vez y se reutiliza.</li>
+                                <li>Mejoran la legibilidad: el programa se divide en bloques lógicos con nombre.</li>
+                                <li>Facilitan la depuración: los errores se localizan en una función concreta.</li>
+                                <li>Permiten reutilizar la misma lógica en varios scripts o proyectos.</li>
+                            </ul>
+                        </div>
+                    </details>
+
+                    <details class='concept-card p-4 rounded-xl border border-slate-700'>
+                        <summary class='cursor-pointer font-semibold text-emerald-300'>
+                            Qué es php.ini y menciona algunas directivas importantes.
+                        </summary>
+                        <div class='mt-3 text-slate-200'>
+                            <p class='mb-2'>
+                                php.ini es el fichero principal de configuración de PHP. Desde él se controlan aspectos
+                                como
+                                el manejo de errores, la subida de ficheros o el tiempo máximo de ejecución.
+                            </p>
+                            <ul class='list-disc list-inside'>
+                                <li>file_uploads: activa o desactiva la subida de ficheros.</li>
+                                <li>upload_max_filesize: tamaño máximo de cada fichero subido.</li>
+                                <li>max_execution_time: segundos máximos de ejecución de un script.</li>
+                                <li>short_open_tags: permite o no usar &lt;? en lugar de &lt;?php.</li>
+                                <li>error_reporting: define qué tipos de errores se muestran.</li>
+                            </ul>
+                        </div>
+                    </details>
+                </div>
+            </div>
+        </div>
+
+    </div> <!-- fin slider-container -->
+
+    <div class='nav-controls'>
+        <button id='prevBtn' class='nav-btn' aria-label='Anterior'>
+            <i class='fa-solid fa-chevron-left'></i>
+        </button>
+        <button id='nextBtn' class='nav-btn' aria-label='Siguiente'>
+            <i class='fa-solid fa-chevron-right'></i>
+        </button>
+    </div>
+
+    <script>
+        const slider = document.getElementById('slider');
+        const slides = document.querySelectorAll('.slide');
+        const progressBar = document.getElementById('progressBar');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const totalSlides = slides.length;
+        let currentSlide = 0;
+
+        function updateUI() {
+            slider.style.transform = `translateX(-${currentSlide * 100}vw)`;
+            const progress = ((currentSlide + 1) / totalSlides) * 100;
+            progressBar.style.width = progress + '%';
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === totalSlides - 1;
+        }
+
+        prevBtn.addEventListener('click', () => {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateUI();
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                updateUI();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') {
+                nextBtn.click();
+            } else if (e.key === 'ArrowLeft') {
+                prevBtn.click();
+            }
+        });
+
+        updateUI();
+    </script>
+</body>
+
+</html>
