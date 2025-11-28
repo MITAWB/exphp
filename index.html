@@ -758,6 +758,96 @@ $resultado = $texto1 . $texto2; // operador de concatenación
             </div>
         </div>
 
+        <!-- 7b. Tema 2 – Funciones de cadenas -->
+        <div class="slide">
+            <div class="max-w-5xl w-full">
+                <div class="flex items-center gap-4 mb-8">
+                    <span class="bg-indigo-600 text-white px-3 py-1 rounded font-bold">Tema 2</span>
+                    <h2 class="text-3xl font-bold">Funciones importantes de cadenas (strings)</h2>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8 text-sm">
+                    <!-- Grupo 1: búsqueda, recorte y longitud -->
+                    <div class="concept-card p-6 rounded-xl border-l-4 border-sky-500">
+                        <span class="exam-badge badge-test">Strings 1</span>
+                        <h3 class="text-xl font-semibold text-sky-300 mb-3">Buscar, sustituir y trocear</h3>
+                        <ul class="list-disc list-inside text-slate-200 space-y-1">
+                            <li>
+                                <code>str_replace($busca, $sustituye, $texto)</code> → devuelve
+                                una cadena nueva donde se ha sustituido <code>$busca</code> por
+                                <code>$sustituye</code>.
+                            </li>
+                            <li>
+                                <code>substr($texto, $inicio, $longitud)</code> → devuelve un
+                                “trozo” de la cadena empezando en <code>$inicio</code> y
+                                opcionalmente con <code>$longitud</code> caracteres.
+                            </li>
+                            <li>
+                                <code>strlen($texto)</code> → devuelve la longitud de la cadena
+                                (nº de caracteres).
+                            </li>
+                            <li>
+                                <code>strpos($texto, $subcadena)</code> → devuelve la posición
+                                donde aparece <code>$subcadena</code> o <code>false</code> si
+                                no se encuentra.
+                            </li>
+                        </ul>
+                        <div class="code-block text-xs mt-3">
+$frase   = "hola mundo";
+$largo   = strlen($frase);          // 10
+$parte   = substr($frase, 5, 5);    // "mundo"
+$posM    = strpos($frase, "m");     // 5
+$frase2  = str_replace("hola", "adiós", $frase);
+                        </div>
+                    </div>
+
+                    <!-- Grupo 2: mayúsculas/minúsculas y espacios -->
+                    <div class="concept-card p-6 rounded-xl border-l-4 border-emerald-500">
+                        <span class="exam-badge badge-test">Strings 2</span>
+                        <h3 class="text-xl font-semibold text-emerald-300 mb-3">Formato y espacios</h3>
+                        <ul class="list-disc list-inside text-slate-200 space-y-1">
+                            <li>
+                                <code>strtolower($texto)</code> → devuelve la cadena en
+                                minúsculas.
+                            </li>
+                            <li>
+                                <code>strtoupper($texto)</code> → devuelve la cadena en
+                                mayúsculas.
+                            </li>
+                            <li>
+                                <code>ltrim($texto)</code> → elimina espacios en blanco al
+                                principio de la cadena.
+                            </li>
+                            <li>
+                                <code>rtrim($texto)</code> → elimina espacios al final.
+                            </li>
+                            <li>
+                                <code>trim($texto)</code> → elimina espacios al principio y al
+                                final.
+                            </li>
+                            <li>
+                                <code>nl2br($texto)</code> → convierte saltos de línea
+                                <code>\n</code> en etiquetas <code>&lt;br&gt;</code> HTML.
+                            </li>
+                        </ul>
+                        <div class="code-block text-xs mt-3">
+$nombre   = "   Mita   ";
+$clean    = trim($nombre);              // "Mita"
+$minus    = strtolower("HOLA");         // "hola"
+$mayus    = strtoupper("php");          // "PHP"
+$textoWeb = nl2br("línea 1\nlínea 2");  // mete &lt;br&gt; entre líneas
+                        </div>
+                        <div class="exam-tip mt-3">
+                            Para el tipo test: recuerda bien qué hace <code>strlen()</code>,
+                            <code>str_replace()</code>, <code>strtolower()/strtoupper()</code>
+                            y <code>trim()/ltrim()/rtrim()</code>, son las más típicas.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <!-- 8. Tema 3 – Sentencias y bucles -->
         <div class="slide">
             <div class="max-w-5xl w-full">
@@ -905,6 +995,97 @@ multilínea */</code></li>
                 </div>
             </div>
         </div>
+
+                <!-- 9b. Tema 3 – Funciones de arrays -->
+        <div class="slide">
+            <div class="max-w-5xl w-full">
+                <div class="flex items-center gap-4 mb-8">
+                    <span class="bg-emerald-600 text-white px-3 py-1 rounded font-bold">Tema 3</span>
+                    <h2 class="text-3xl font-bold">Funciones típicas de arrays en PHP</h2>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8 text-sm">
+                    <!-- Grupo 1: inspección y borrado -->
+                    <div class="concept-card p-6 rounded-xl border-l-4 border-emerald-500">
+                        <span class="exam-badge badge-test">Arrays 1</span>
+                        <h3 class="text-xl font-semibold text-emerald-300 mb-3">Inspección y eliminación</h3>
+                        <ul class="list-disc list-inside text-slate-200 space-y-1">
+                            <li>
+                                <code>is_array($var)</code> → devuelve <code>true</code> si
+                                la variable es un array.
+                            </li>
+                            <li>
+                                <code>count($array)</code> → devuelve cuántos elementos tiene
+                                el array.
+                            </li>
+                            <li>
+                                <code>in_array($valor, $array)</code> → devuelve
+                                <code>true</code> si el valor está dentro del array.
+                            </li>
+                            <li>
+                                <code>unset($array)</code> → borra el array completo.
+                            </li>
+                            <li>
+                                <code>unset($array[$clave])</code> → borra solo ese elemento.
+                            </li>
+                        </ul>
+                        <div class="code-block text-xs mt-3">
+$nums = array(10, 20, 30);
+$total = count($nums);                  // 3
+$esta  = in_array(20, $nums);           // true
+unset($nums[1]);                        // borra el 20
+                        </div>
+                    </div>
+
+                    <!-- Grupo 2: unir, cortar y ordenar -->
+                    <div class="concept-card p-6 rounded-xl border-l-4 border-sky-500">
+                        <span class="exam-badge badge-test">Arrays 2</span>
+                        <h3 class="text-xl font-semibold text-sky-300 mb-3">Unir, extraer y ordenar</h3>
+                        <ul class="list-disc list-inside text-slate-200 space-y-1">
+                            <li>
+                                <code>array_merge($a1, $a2, ...)</code> → devuelve un array
+                                con todos los elementos de los arrays dados.
+                            </li>
+                            <li>
+                                <code>array_slice($array, $offset, $length)</code> → devuelve
+                                una “porción” del array original.
+                            </li>
+                            <li>
+                                <code>sort($array)</code> → ordena los valores de menor a
+                                mayor (modifica el array).
+                            </li>
+                            <li>
+                                <code>rsort($array)</code> → ordena de mayor a menor.
+                            </li>
+                            <li>
+                                <code>array_keys($array)</code> → devuelve un array con todas
+                                las claves.
+                            </li>
+                            <li>
+                                <code>array_values($array)</code> → devuelve un array con
+                                todos los valores.
+                            </li>
+                        </ul>
+                        <div class="code-block text-xs mt-3">
+$a1   = array(1, 2);
+$a2   = array(3, 4);
+$todo = array_merge($a1, $a2);          // [1,2,3,4]
+
+$sub  = array_slice($todo, 1, 2);       // [2,3]
+sort($todo);                            // ordena ascendente
+rsort($todo);                           // ordena descendente
+                        </div>
+                        <div class="exam-tip mt-3">
+                            Para el examen ten claras las ideas: <code>count()</code>,
+                            <code>unset()</code>, <code>array_merge()</code>,
+                            <code>array_slice()</code>, <code>sort()</code> y
+                            <code>rsort()</code> son las que más suelen preguntar.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
         <!-- 10. Tema 4 – Funciones y funciones útiles -->
         <div class='slide'>
