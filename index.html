@@ -623,9 +623,9 @@
                             En PHP, el código se inserta entre etiquetas especiales:
                         </p>
                         <div class="code-block text-xs">
-                            &lt;?php
-                            // código PHP
-                            ?&gt;
+&lt;?php
+// código PHP
+?&gt;
                         </div>
                         <p class="text-slate-200 mb-2">
                             Todo lo que esté dentro se ejecuta en <span class="font-semibold">servidor</span>.
@@ -705,10 +705,10 @@
                         </ul>
                         <p class="text-slate-200 mb-2">Conversión de tipos:</p>
                         <div class="code-block text-xs">
-                            $entero = intval($var);
-                            $real = floatval($var);
-                            $texto = strval($var);
-                            $otroInt = (int)$var; // casting
+$entero = intval($var);
+$real = floatval($var);
+$texto = strval($var);
+$otroInt = (int)$var; // casting
                         </div>
                     </div>
 
@@ -720,9 +720,9 @@
                                 Una cadena es un conjunto de caracteres entre comillas dobles.
                             </p>
                             <div class="code-block text-xs">
-                                $nombre = "Mita";
-                                echo "Hola {$nombre}"; // se recomienda usar llaves
-                                $resultado = $texto1 . $texto2; // operador de concatenación
+$nombre = "Mita";
+echo "Hola {$nombre}"; // se recomienda usar llaves
+$resultado = $texto1 . $texto2; // operador de concatenación
                             </div>
                             <p class="text-slate-200 mb-1">Funciones típicas:</p>
                             <ul class="list-disc list-inside text-slate-200">
@@ -773,31 +773,31 @@
                         <p class="text-slate-200 mb-2"><strong>if</strong>: ejecuta el bloque sólo si se cumple la
                             condición.</p>
                         <div class="code-block text-xs">
-                            if ($edad &gt;= 18) {
-                            echo "Mayor de edad";
-                            }
+if ($edad &gt;= 18) {
+    echo "Mayor de edad";
+}
                         </div>
                         <p class="text-slate-200 mb-2"><strong>if-else</strong>: dos caminos posibles.</p>
                         <div class="code-block text-xs">
-                            if ($edad &gt;= 18) {
-                            echo "Mayor";
-                            } else {
-                            echo "Menor";
-                            }
+if ($edad &gt;= 18) {
+    echo "Mayor";
+} else {
+    echo "Menor";
+}
                         </div>
                         <p class="text-slate-200 mb-2"><strong>switch</strong>: cuando una variable puede tomar
                             muchos valores.</p>
                         <div class="code-block text-xs">
-                            switch ($perfil) {
-                            case "admin":
-                            // ...
-                            break;
-                            case "user":
-                            // ...
-                            break;
-                            default:
-                            // ...
-                            }
+switch ($perfil) {
+    case "admin":
+        // ...
+    break;
+    case "user":
+        // ...
+    break;
+    default:
+        // ...
+}
                         </div>
                     </div>
 
@@ -813,18 +813,18 @@
                             <li><strong>foreach</strong>: recorre arrays de forma sencilla.</li>
                         </ul>
                         <div class="code-block text-xs">
-                            for ($i = 1; $i &lt;= 10; $i++) {
-                            echo $i;
-                            }
+for ($i = 1; $i &lt;= 10; $i++) {
+    echo $i;
+}
 
-                            while ($i &lt;= 10) {
-                            echo $i;
-                            $i++;
-                            }
+while ($i &lt;= 10) {
+    echo $i;
+    $i++;
+}
 
-                            foreach ($usuarios as $u) {
-                            echo $u;
-                            }
+foreach ($usuarios as $u) {
+    echo $u;
+}
                         </div>
                         <div class="warning-tip text-xs">
                             Recuerda <code>break</code> para salir de un bucle y <code>continue</code> para saltar a la
@@ -849,15 +849,15 @@
                         <h3 class="text-xl font-semibold text-emerald-300 mb-3">Crear y trabajar con arrays</h3>
                         <p class="text-slate-200 mb-2">Un array guarda varios valores en una sola variable.</p>
                         <div class="code-block text-xs">
-                            // Array asociativo (clave =&gt; valor)
-                            $notas = array(
-                            "Juan" =&gt; 7,
-                            "Ana" =&gt; 9,
-                            );
+// Array asociativo (clave =&gt; valor)
+$notas = array(
+    "Juan" =&gt; 7,
+    "Ana" =&gt; 9,
+);
 
-                            // Array indexado
-                            $nums = array(1, 2, 3);
-                            $nums[] = 4; // añade al final
+// Array indexado
+$nums = array(1, 2, 3);
+$nums[] = 4; // añade al final
                         </div>
                         <p class="text-slate-200 mb-2">Operaciones típicas:</p>
                         <ul class="list-disc list-inside text-slate-200 mb-2">
@@ -875,12 +875,12 @@
                             <h3 class="text-lg font-semibold text-sky-300 mb-2">Arrays multidimensionales</h3>
                             <p class="text-slate-200 mb-2">Una matriz es un array que contiene otros arrays.</p>
                             <div class="code-block text-xs">
-                                $matriz = array(
-                                "user1" =&gt; array("login" =&gt; "juan", "perfil" =&gt; "admin"),
-                                "user2" =&gt; array("login" =&gt; "ana", "perfil" =&gt; "user"),
-                                );
+$matriz = array(
+    "user1" =&gt; array("login" =&gt; "juan", "perfil" =&gt; "admin"),
+    "user2" =&gt; array("login" =&gt; "ana", "perfil" =&gt; "user"),
+);
 
-                                echo $matriz["user1"]["login"]; // "juan"
+echo $matriz["user1"]["login"]; // "juan"
                             </div>
                         </div>
 
@@ -924,12 +924,12 @@ multilínea */</code></li>
                             Puede devolver un valor con return.
                         </p>
                         <div class='code-block text-xs'>
-                            function sumar($a, $b = 0) {
-                            $resultado = $a + $b;
-                            return $resultado;
-                            }
+function sumar($a, $b = 0) {
+    $resultado = $a + $b;
+    return $resultado;
+}
 
-                            $total = sumar(3, 5); // 8
+$total = sumar(3, 5); // 8
                         </div>
                         <p class='text-slate-200 mb-2'>
                             Paso de parámetros:
@@ -966,9 +966,9 @@ multilínea */</code></li>
                             <li><span class='font-semibold'>Búsqueda de ficheros</span>: glob('*.php').</li>
                         </ul>
                         <div class='code-block text-xs'>
-                            $hoy = date('d/m/Y');
-                            $aleatorio = rand(1, 10);
-                            $ficherosPhp = glob('*.php');
+$hoy = date('d/m/Y');
+$aleatorio = rand(1, 10);
+$ficherosPhp = glob('*.php');
                         </div>
                         <div class='exam-tip'>
                             Si te piden ejemplos de funciones de PHP, menciona date, rand, getcwd, glob, fopen/fclose y
@@ -995,11 +995,11 @@ multilínea */</code></li>
                             Un formulario HTML envía datos al servidor cuando el usuario pulsa el botón submit.
                         </p>
                         <div class='code-block text-xs'>
-                            &lt;form action='calcula.php' method='get'&gt;
-                            Valor 1: &lt;input type='text' name='valor1'&gt;
-                            Valor 2: &lt;input type='text' name='valor2'&gt;
-                            &lt;input type='submit' value='Aceptar'&gt;
-                            &lt;/form&gt;
+&lt;form action='calcula.php' method='get'&gt;
+Valor 1: &lt;input type='text' name='valor1'&gt;
+Valor 2: &lt;input type='text' name='valor2'&gt;
+&lt;input type='submit' value='Aceptar'&gt;
+&lt;/form&gt;
                         </div>
                         <ul class='list-disc list-inside text-slate-200'>
                             <li><span class='font-semibold'>action</span>: fichero PHP que procesará los datos.</li>
@@ -1047,13 +1047,13 @@ multilínea */</code></li>
                             <li>Adecuado para búsquedas y filtros.</li>
                         </ul>
                         <div class='code-block text-xs'>
-                            // URL que llega al servidor:
-                            http://dominio.com/calcula.php?valor1=3&amp;valor2=5
+// URL que llega al servidor:
+http://dominio.com/calcula.php?valor1=3&amp;valor2=5
 
-                            // En calcula.php:
-                            $valor1 = $_GET['valor1'];
-                            $valor2 = $_GET['valor2'];
-                            $resultado = $valor1 + $valor2;
+// En calcula.php:
+$valor1 = $_GET['valor1'];
+$valor2 = $_GET['valor2'];
+$resultado = $valor1 + $valor2;
                         </div>
                     </div>
 
@@ -1066,20 +1066,20 @@ multilínea */</code></li>
                             <li>Permite enviar más información (formularios largos, contraseñas, etc.).</li>
                         </ul>
                         <div class='code-block text-xs'>
-                            $usuario = $_POST['login'];
-                            $password = $_POST['password'];
+$usuario = $_POST['login'];
+$password = $_POST['password'];
 
-                            function validar($u, $p) {
-                            if ($u == 'user1') {
-                            if ($p == '1234') {
-                            echo 'Correcto, puedes pasar!';
-                            } else {
-                            echo 'Contraseña incorrecta';
-                            }
-                            } else {
-                            echo 'Usuario incorrecto';
-                            }
-                            }
+function validar($u, $p) {
+    if ($u == 'user1') {
+        if ($p == '1234') {
+            echo 'Correcto, puedes pasar!';
+        } else {
+            echo 'Contraseña incorrecta';
+        }
+    } else {
+        echo 'Usuario incorrecto';
+    }
+}
                         </div>
                         <div class='exam-tip'>
                             Diferencia que tienes que soltar: «GET envía los datos en la URL y POST en el cuerpo de la
